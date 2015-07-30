@@ -1,0 +1,49 @@
+<head>
+	<title>custom-forms</title>
+</head>
+
+<body>
+	<h1>Custom schema forms</h1>
+	<p>Everything is client side, just running in minimongo.</p>
+	<div class="section">{{> addSchema}}</div>
+	<div class="section">{{> displaySchemas}}</div>
+	<div class="section">{{> displayDocuments}}</div>
+</body>
+
+<template name="addSchema">
+		<h1>Construct Schema</h1>
+		<h2>Add field</h2>
+		<div>
+			<input class="input-schema-name" type="text" placeholder="name" />
+			<select class="input-schema-type">
+				<option value="bool">Boolean</option>
+				<option value="text">Text</option>
+			</select>
+			<button class='btn-add-field'>Add field</button>
+		</div>
+		{{#with sampleSchema}}
+			<h2>Schema Sample View</h2>
+			{{>quickForm schema=this id="sampleSchema" type="readonly"}}
+		{{/with}}
+		<div>
+			<button class="btn-add-schema">Add schema to database</button>
+			<button class="btn-clear-schema">Reset</button>
+		</div>
+</template>
+
+<template name="displaySchemas">
+	<h1>Schema List</h1>
+	<p>Schemas in this list are fully functional.</p>
+	{{#each schemas}}
+		<h2>Schema {{i}}</h2>
+		{{>quickForm schema=schema id=getRandom type='insert' collection="App.Documents"}}
+	{{/each}}
+</template>
+
+<template name="displayDocuments">
+	<h1>View Documents</h1>
+	{{#each documents}}
+	<h2>Another Doc</h2>
+		{{stringify this}}
+	{{/each}}
+</template>
