@@ -21,14 +21,16 @@ Template.addSchema.events({
 	// In events, the template instance and dom event are passed in as arguments.
 	'click .btn-add-field': function(event, template) {
 		var schemaObj = template.schemaObject;
-		var nameField = template.$('.input-schema-name');
+		var nameField = template.$('.input-schema-field-name');
 		var name = nameField.val();
 		var type = function(typeString) {
 			switch(typeString) {
 				case 'bool': return Boolean;
 				case 'text': return String;
+				case 'number': return Number;
+				case 'date': return Date;
 			};
-		}(template.$('.input-schema-type').val());
+		}(template.$('.input-schema-field-type').val());
 
 		// Make a schema object
 		var schemaField = {};
@@ -46,8 +48,29 @@ Template.addSchema.events({
 	},
 
 	'click .btn-add-schema': function (event, template) {
-		App.Schemas.insert({ schema: template.schemaObject.get() });
+		var schemaName = template.$('.input-schema-name').val();
+		if (!schemaName || !template.schemaObject.get()) {
+			alert('Make a proper schema and name it plz.');
+			return;
+		}
+		App.Schemas.insert(
+			{
+				// Add the title key to the schema.
+				schema: _.extend(template.schemaObject.get(),
+				{
+					'schemaName': {
+						type: String,
+						label: 'schema name',
+						defaultValue: schemaName,
+						autoform: {
+							type: 'hidden',
+						},
+					}
+				}),
+				schemaName: schemaName,
+			}
+		);
 		template.schemaObject.set(null);
+		template.$('.input-schema-name').val('');
 	},
-
 });

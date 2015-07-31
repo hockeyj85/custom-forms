@@ -10,40 +10,52 @@
 	<div class="section">{{> displayDocuments}}</div>
 </body>
 
-<template name="addSchema">
-		<h1>Construct Schema</h1>
-		<h2>Add field</h2>
-		<div>
-			<input class="input-schema-name" type="text" placeholder="name" />
-			<select class="input-schema-type">
-				<option value="bool">Boolean</option>
-				<option value="text">Text</option>
-			</select>
-			<button class='btn-add-field'>Add field</button>
-		</div>
-		{{#with sampleSchema}}
-			<h2>Schema Sample View</h2>
-			{{>quickForm schema=this id="sampleSchema" type="readonly"}}
-		{{/with}}
-		<div>
-			<button class="btn-add-schema">Add schema to database</button>
-			<button class="btn-clear-schema">Reset</button>
-		</div>
-</template>
-
 <template name="displaySchemas">
 	<h1>Schema List</h1>
 	<p>Schemas in this list are fully functional.</p>
 	{{#each schemas}}
-		<h2>Schema {{i}}</h2>
+	<div class="section">
+		<h2>{{schemaName}}</h2>
 		{{>quickForm schema=schema id=getRandom type='insert' collection="App.Documents"}}
+	</div>
 	{{/each}}
+</template>
+
+<template name="addSchema">
+	<h1>Construct Schema</h1>
+	<label for="input-schema-name">Schema Name</label>
+	<input type="text" class="input-schema-name" placeholder="schema name" />
+	<h2>Add field</h2>
+	<div>
+		<label for="input-schema-field-name">Field Name</label>
+		<input class="input-schema-field-name" type="text" placeholder="key name (must be unique)" />
+		<label for="input-schema-field-type">Field Type</label>
+		<select class="input-schema-field-type">
+			<option value="text">Text</option>
+			<option value="number">Number</option>
+			<option value="bool">Boolean</option>
+			<option value="date">Date</option>
+		</select>
+		<button class='btn-add-field'>Add field</button>
+	</div>
+	{{#with sampleSchema}}
+	<h2>Schema Sample View</h2>
+	{{>quickForm schema=this id="sampleSchema" type="readonly"}}
+	{{/with}}
+	<div>
+		<button class="btn-add-schema">Add schema to database</button>
+		<button class="btn-clear-schema">Reset</button>
+	</div>
 </template>
 
 <template name="displayDocuments">
 	<h1>View Documents</h1>
 	{{#each documents}}
-	<h2>Another Doc</h2>
-		{{stringify this}}
+	<h2>{{this.schemaName}}</h2>
+		<ul>
+			{{#each keyVal this}}
+			<li>{{key}}: {{val}}</li>
+			{{/each}}
+		</ul>
 	{{/each}}
 </template>
